@@ -70,6 +70,20 @@ def validate_card_input(card_input):
         return False, "Invalid expiry date."
     return True, (n, mm, yy, cvc)
 
+
+
+@app.route('/st', methods=['GET', 'POST'])
+def check_card_gate2():
+    if request.method == 'POST':
+        data = request.get_json(force=True)
+        card_input = data.get('card')
+    else:
+        card_input = request.args.get('card')
+
+    valid, result = validate_card_input(card_input)
+    if not valid:
+        return jsonify({"error": result}), 400
+
 @app.route('/')
 def home():
     return (
@@ -94,21 +108,7 @@ def home():
         "Owner's Telegram: t.me/nairobiangoon1
 "
         "Free checker bot: @AuthCcV3_bot"
-    )
-
-@app.route('/st', methods=['GET', 'POST'])
-def check_card_gate2():
-    if request.method == 'POST':
-        data = request.get_json(force=True)
-        card_input = data.get('card')
-    else:
-        card_input = request.args.get('card')
-
-    valid, result = validate_card_input(card_input)
-    if not valid:
-        return jsonify({"error": result}), 400
-
-    n, mm, yy, cvc = result
+    )    n, mm, yy, cvc = result
     proxy = choose_proxy(PROXIES)
     acc = generate_random_account()
     user_agent = generate_user_agent()
