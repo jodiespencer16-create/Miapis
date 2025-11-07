@@ -1,0 +1,7 @@
+flask==2.2.5
+requests==2.31.0
+gunicorn==20.1.0
+braintree==4.38.0
+beautifulsoup4==4.12.2
+user_agent==1.0.4
+python-dotenv==1.0.0
