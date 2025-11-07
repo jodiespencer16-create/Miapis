@@ -72,7 +72,29 @@ def validate_card_input(card_input):
 
 @app.route('/')
 def home():
-    return "API is running. Use /st or /b3_npnbet endpoints."
+    return (
+        "API is running. Use the following endpoints:
+
+"
+        "Braintree checker:
+"
+        "https://miapis.onrender.com/b3_npnbet?lista=5170140098058438|11|26|070
+
+"
+        "Stripe checker:
+"
+        "https://miapis.onrender.com/st?card=5170140098058438|11|26|070
+
+"
+        "More APIs coming soon!
+
+"
+        "Owner's Telegram channel: https://t.me/privatecoreeee
+"
+        "Owner's Telegram: t.me/nairobiangoon1
+"
+        "Free checker bot: @AuthCcV3_bot"
+    )
 
 @app.route('/st', methods=['GET', 'POST'])
 def check_card_gate2():
