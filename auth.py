@@ -10,7 +10,7 @@ import base64
 
 app = Flask(__name__)
 
-REQUEST_TIMEOUT = 1000
+REQUEST_TIMEOUT = 500
 PROXIES = [
     'http://purevpn0s11664812:5TUjjTyn6G6DJl@px591701.pointtoserver.com:10780',
     'http://purevpn0s11664812:5TUjjTyn6G6DJl@px591801.pointtoserver.com:10780',
@@ -70,7 +70,21 @@ def validate_card_input(card_input):
         return False, "Invalid expiry date."
     return True, (n, mm, yy, cvc)
 
+@app.route('/')
+def home():
+    return '''API is running. Use the following endpoints:
 
+Braintree checker:
+https://miapis.onrender.com/b3_npnbet?lista=5170140098058438|11|26|070
+
+Stripe checker:
+https://miapis.onrender.com/st?card=5170140098058438|11|26|070
+
+More APIs coming soon!
+
+Owner's Telegram channel: https://t.me/privatecoreeee
+Owner's Telegram: t.me/nairobiangoon1
+Free checker bot: @AuthCcV3_bot'''
 
 @app.route('/st', methods=['GET', 'POST'])
 def check_card_gate2():
@@ -84,31 +98,7 @@ def check_card_gate2():
     if not valid:
         return jsonify({"error": result}), 400
 
-@app.route('/')
-def home():
-    return (
-        "API is running. Use the following endpoints:
-
-"
-        "Braintree checker:
-"
-        "https://miapis.onrender.com/b3_npnbet?lista=5170140098058438|11|26|070
-
-"
-        "Stripe checker:
-"
-        "https://miapis.onrender.com/st?card=5170140098058438|11|26|070
-
-"
-        "More APIs coming soon!
-
-"
-        "Owner's Telegram channel: https://t.me/privatecoreeee
-"
-        "Owner's Telegram: t.me/nairobiangoon1
-"
-        "Free checker bot: @AuthCcV3_bot"
-    )    n, mm, yy, cvc = result
+    n, mm, yy, cvc = result
     proxy = choose_proxy(PROXIES)
     acc = generate_random_account()
     user_agent = generate_user_agent()
