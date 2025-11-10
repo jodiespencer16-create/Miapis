@@ -289,8 +289,8 @@ def b3_npnbet():
     
     session = requests.Session()
     proxies = {
-        "http": "http://eleona:eleona1@zxo.run.place:6969",
-        "https": "http://eleona:eleona1@zxo.run.place:6969",
+        "http": "http://216.10.27.159:6837:eweduytq:byrw0oc62zlc",
+        "https": "http//216.10.27.159:6837:eweduytq:byrw0oc62zlc",
     }
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
