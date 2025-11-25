@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 from user_agent import generate_user_agent
 import time
 import base64
+import re
 
 app = Flask(__name__)
 
