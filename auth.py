@@ -13,12 +13,8 @@ app = Flask(__name__)
 
 REQUEST_TIMEOUT = 500
 PROXIES = [
-    'http://purevpn0s11664812:5TUjjTyn6G6DJl@px591701.pointtoserver.com:10780',
-    'http://purevpn0s11664812:5TUjjTyn6G6DJl@px591801.pointtoserver.com:10780',
-    'http://purevpn0s11664812:5TUjjTyn6G6DJl@px711001.pointtoserver.com:10780',
-    'http://purevpn0s11664812:5TUjjTyn6G6DJl@px510201.pointtoserver.com:10780',
-    'http://purevpn0s11664812:5TUjjTyn6G6DJl@px022409.pointtoserver.com:10780',
-    'http://purevpn0s11664812:5TUjjTyn6G6DJl@px300902.pointtoserver.com:10780',
+    'pl-tor.pvdata.host:8080:g2rTXpNfPdcw2fzGtWKp62yH:nizar1elad2',
+    'proxy.pinguproxy.com:12933:VzDiUZjA:ujDiQ3uj',
     'http://purevpn0s11664812:5TUjjTyn6G6DJl@px130501.pointtoserver.com:10780',
 ]
 
@@ -291,7 +287,7 @@ def b3_npnbet():
     session = requests.Session()
     proxies = {
         "http": "http://eweduytq:byrw0oc62zlc@216.10.27.159:6837",
-        "https": "http://eweduytq:byrw0oc62zlc@216.10.27.159:6837",
+        "https": "pl-tor.pvdata.host:8080:g2rTXpNfPdcw2fzGtWKp62yH:nizar1elad2",
     }
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
