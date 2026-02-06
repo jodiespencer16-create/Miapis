@@ -13,9 +13,7 @@ app = Flask(__name__)
 
 REQUEST_TIMEOUT = 500
 PROXIES = [
-    'http://pl-tor.pvdata.host:8080:g2rTXpNfPdcw2fzGtWKp62yH:nizar1elad2',
     'http://proxy.pinguproxy.com:12933:VzDiUZjA:ujDiQ3uj',
-    'http://purevpn0s11664812:5TUjjTyn6G6DJl@px130501.pointtoserver.com:10780',
 ]
 
 def choose_proxy(proxies_list):
